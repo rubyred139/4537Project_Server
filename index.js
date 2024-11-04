@@ -13,6 +13,7 @@ const url = require("url");
 const homeRouter = include("routes/home");
 const authRouter = include("routes/auth");
 const adminRouter = include("routes/admin");
+const userRouter = include("routes/user");
 
 //database connection
 const db_utils = include("database/db_utils");
@@ -64,6 +65,7 @@ app.use(express.static(__dirname + "/public"));
 app.use("/", homeRouter);
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
+app.use("/user", userRouter);
 
 app.get("*", (req, res) => {
 	res.status(404).json({ error: "Page Not Found" });

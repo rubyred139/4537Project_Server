@@ -47,7 +47,10 @@ router.post("/signupSubmit", async (req, res) => {
 		req.session.userId = userId;
 		req.session.cookie.maxAge = expireTime;
 
-		return res.status(200).json({ message: "User created successfully" });
+		return res.status(200).json({
+			message: "User created successfully",
+			userId: req.session.userId,
+		});
 	} catch (error) {
 		console.error("Error inserting user:", error.message);
 		return res.status(500).json({
@@ -81,20 +84,25 @@ router.post("/loginSubmit", async (req, res) => {
 		const passwordMatches = await bcrypt.compare(password, user.password);
 
 		if (passwordMatches) {
-			const user_type = await users.getUserType({ email: user.email });
+			const userType = await users.getUserType({ email: user.email });
 			req.session.authenticated = true;
 			req.session.email = user.email;
 			req.session.userId = user.user_id;
-			req.session.userType = user_type;
+			req.session.userType = userType;
 			req.session.cookie.maxAge = expireTime;
 			console.log("userType: " + req.session.userType);
 
 			console.log("userId: " + req.session.userId);
 
-			const redirectUrl = user_type === "admin" ? "/admin" : "/";
-			return res
-				.status(200)
-				.json({ message: "Login successful", redirectUrl });
+			const redirectUrl =
+				userType === "admin" ? "/admin.html" : "/index.html";
+			return res.status(200).json({
+				message: "Login successful",
+				redirectUrl,
+				userType,
+				userId: req.session.userId,
+				userEmail: req.session.email,
+			});
 		} else {
 			return res.status(401).json({
 				errorMessage: "Incorrect email or password",
