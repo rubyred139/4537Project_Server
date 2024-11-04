@@ -35,7 +35,7 @@ router.post("/signupSubmit", async (req, res) => {
 	if (validationResult.error != null) {
 		const errorMessage = validationResult.error.message;
 		console.log(validationResult.error);
-		return res.render("signupError", { errorMessage: errorMessage });
+		return res.status(400).json({ errorMessage: errorMessage });
 	}
 
 	try {
