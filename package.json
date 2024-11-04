@@ -1,0 +1,30 @@
+{
+	"dependencies": {
+		"axios": "^1.7.7",
+		"bcrypt": "^5.1.1",
+		"cloudinary": "^2.4.0",
+		"connect-mongo": "^5.1.0",
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.5",
+		"ejs": "^3.1.10",
+		"express": "^4.21.0",
+		"express-mongo-sanitize": "^2.2.0",
+		"express-session": "^1.18.1",
+		"init": "^0.1.2",
+		"joi": "^17.13.3",
+		"mongodb": "^6.9.0",
+		"multer": "^1.4.5-lts.1",
+		"mysql2": "^3.11.2",
+		"node": "^22.8.0",
+		"nodemon": "^3.1.4"
+	},
+	"name": "-comp4921_projec2_group2_ruby_chelsea",
+	"description": "",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC"
+}
