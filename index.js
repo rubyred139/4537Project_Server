@@ -28,7 +28,11 @@ app.set("view engine", "ejs");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors({ origin: "http://localhost:8080" })); // Replace with your client URL
+app.use(
+	cors({
+		origin: "*", // Allow all origins
+	})
+);
 
 app.use(
 	session({
@@ -62,8 +66,7 @@ app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 
 app.get("*", (req, res) => {
-	res.status(404);
-	res.render("404");
+	res.status(404).json({ error: "Page Not Found" });
 });
 
 app.listen(port, () => {
