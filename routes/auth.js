@@ -71,7 +71,7 @@ router.post("/loginSubmit", async (req, res) => {
 		const rows = await users.getUserByEmail(email);
 
 		if (rows.length === 0) {
-			return res.render("login", {
+			return res.status(401).json({
 				errorMessage: "Incorrect email or password",
 			});
 		}
