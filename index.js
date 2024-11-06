@@ -19,9 +19,9 @@ const userRouter = include("routes/user");
 const db_utils = include("database/db_utils");
 const mongoStore = include("databaseConnection").mongoStore;
 
-const sessionValidation = include(
-  "routes/function/sessionValidation"
-).sessionValidation;
+// const sessionValidation = include(
+//   "routes/function/sessionValidation"
+// ).sessionValidation;
 
 db_utils.printMySQLVersion();
 
@@ -32,6 +32,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
     origin: "*", // Allow all origins
+    // origin: "http://127.0.0.1:5500", // Allow all origins
+    // credentials: true, // Allow cookies
   })
 );
 
@@ -43,6 +45,11 @@ app.use(
     resave: true,
   })
 );
+
+const sessionValidation = include(
+  "routes/function/sessionValidation"
+).sessionValidation;
+
 const navLinks = [
   { name: "Home", link: "/" },
   { name: "Admin", link: "/admin" },
@@ -58,6 +65,7 @@ app.use("/", (req, res, next) => {
   res.locals.loggedIn = req.session.email ? true : false;
   res.locals.errorMessage = null;
   res.locals.userType = req.session.userType;
+  res.locals.userId = req.session.userId;
   next();
 });
 

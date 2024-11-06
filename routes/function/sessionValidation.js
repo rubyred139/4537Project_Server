@@ -1,16 +1,17 @@
 function isValidSession(req) {
-	if (req.session.authenticated) {
-		return true;
-	}
-	return false;
+  if (req.session.authenticated) {
+    return true;
+  }
+  return false;
 }
 
 function sessionValidation(req, res, next) {
-	if (isValidSession(req)) {
-		next();
-	} else {
-		res.redirect("/auth/login");
-	}
+  if (isValidSession(req)) {
+    next();
+  } else {
+    // res.redirect("/auth/login");
+    res.status(401).json({ error: "Unauthorized. Please log in." });
+  }
 }
 
 module.exports = { isValidSession, sessionValidation };
