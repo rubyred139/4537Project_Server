@@ -31,9 +31,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: "*", // Allow all origins
-    // origin: "http://127.0.0.1:5500", // Allow all origins
-    // credentials: true, // Allow cookies
+    // origin: "*", // Allow all origins
+    origin: "http://127.0.0.1:5500",
+    credentials: true, // Allow cookies
   })
 );
 
@@ -43,6 +43,7 @@ app.use(
     store: mongoStore, //default is memory store
     saveUninitialized: false,
     resave: true,
+    cookie: { httpOnly: true, secure: false },
   })
 );
 
@@ -65,7 +66,6 @@ app.use("/", (req, res, next) => {
   res.locals.loggedIn = req.session.email ? true : false;
   res.locals.errorMessage = null;
   res.locals.userType = req.session.userType;
-  res.locals.userId = req.session.userId;
   next();
 });
 

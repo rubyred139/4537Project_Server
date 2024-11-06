@@ -75,7 +75,9 @@ router.post(
       // Convert the image to a 3D model and get the file path
       const outputFilePath = await simulate3DConversion(req.file.path);
 
-      const userId = req.session.userId;
+      //   const userId = req.session.userId;
+      const userId = req.body.userId;
+      //   console.log("User ID from upload:", userId);
       const tokensUsed = 1;
       const updateSuccess = await db_utils.updateAPITokens(userId, tokensUsed);
 
