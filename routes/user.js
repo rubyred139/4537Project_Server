@@ -3,11 +3,17 @@ const router = express.Router();
 const users = require("../database/users");
 require("dotenv").config();
 
-const { sessionValidation } = require("./function/sessionValidation");
+const {
+	isValidSession,
+	sessionValidation,
+} = require("./function/sessionValidation");
+
+router.get("/", async (req, res) => {
+	return res.json({ loggedIn: isValidSession(req) });
+});
 
 router.get("/:email", async (req, res) => {
 	const email = req.params.email;
-	console.log(email);
 	const user = await users.getUserByEmail(email);
 	res.status(200).json({
 		user: user,
