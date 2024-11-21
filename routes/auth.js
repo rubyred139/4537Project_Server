@@ -25,6 +25,11 @@ router.post("/signupSubmit", async (req, res) => {
 	try {
 		const hashedPassword = await bcrypt.hash(password, saltRounds);
 		const userId = await users.createUser({ email, hashedPassword });
+		if (!userId) {
+			return res
+				.status(400)
+				.json({ errorMessage: "Email already in use" });
+		}
 
 		req.session.authenticated = true;
 		req.session.email = email;

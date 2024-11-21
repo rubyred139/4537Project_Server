@@ -1,6 +1,12 @@
 const database = include("databaseConnection").database;
 
 async function createUser(postData) {
+	//validate if email is already in use
+	const emailExists = await getUserByEmail(postData.email);
+	if (emailExists.length > 0) {
+		return false;
+	}
+
 	//default api token values
 	let initializeAPITokenSQL = `
 		INSERT INTO API_token
