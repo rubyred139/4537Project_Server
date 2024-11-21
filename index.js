@@ -19,10 +19,6 @@ const userRouter = include("routes/user");
 const db_utils = include("database/db_utils");
 const mongoStore = include("databaseConnection").mongoStore;
 
-// const sessionValidation = include(
-//   "routes/function/sessionValidation"
-// ).sessionValidation;
-
 db_utils.printMySQLVersion();
 
 app.set("view engine", "ejs");
@@ -46,13 +42,10 @@ app.use(
 		cookie: {
 			secure: false,
 			httpOnly: true,
+			maxAge: 60 * 60 * 1000, // 1 hour
 		},
 	})
 );
-
-const sessionValidation = include(
-	"routes/function/sessionValidation"
-).sessionValidation;
 
 const navLinks = [
 	{ name: "Home", link: "/" },
@@ -66,7 +59,7 @@ const navLinks = [
 app.use("/", (req, res, next) => {
 	app.locals.navLinks = navLinks;
 	app.locals.currentURL = url.parse(req.url).pathname;
-	res.locals.loggedIn = req.session.email ? true : false;
+	res.locals.loggedIn = req.session.authenticated ? true : false;
 	res.locals.errorMessage = null;
 	res.locals.userType = req.session.userType;
 	next();

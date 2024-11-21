@@ -3,13 +3,13 @@ const router = express.Router();
 const users = require("../database/users");
 require("dotenv").config();
 
-const {
-	isValidSession,
-	sessionValidation,
-} = require("./function/sessionValidation");
+const { isValidSession, sessionValidation } = include(
+	"routes/function/sessionValidation"
+);
 
+router.use(sessionValidation);
 router.get("/", async (req, res) => {
-	return res.json({ loggedIn: isValidSession(req) });
+	return res.json({ loggedIn: req.session.authenticated });
 });
 
 router.get("/:email", async (req, res) => {
@@ -24,7 +24,6 @@ router.get("/:email", async (req, res) => {
 router.get("/tokens/:userId", async (req, res) => {
 	let userAvailableTokens = null;
 	const uid = req.params.userId;
-	console.log(uid);
 
 	if (uid) {
 		userAvailableTokens = await users.getUserAvailableTokens(uid);

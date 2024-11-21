@@ -6,22 +6,6 @@ const saltRounds = 12;
 const expireTime = 60 * 60 * 1000; //expires after an hour  (hours * minutes * seconds * millis)
 
 const users = require("../database/users");
-const isValidSession = include(
-	"routes/function/sessionValidation"
-).isValidSession;
-
-router.get("/", (req, res) => {
-	const loggedIn = isValidSession(req) || false;
-
-	return res.json({ loggedIn: loggedIn });
-});
-
-// router.get("/signup", (req, res) => {
-// 	if (isValidSession(req)) {
-// 		return res.redirect("/");
-// 	}
-// 	res.render("signup");
-// });
 
 router.post("/signupSubmit", async (req, res) => {
 	var email = req.body.email;
@@ -35,7 +19,6 @@ router.post("/signupSubmit", async (req, res) => {
 	const validationResult = schema.validate({ email, password });
 	if (validationResult.error != null) {
 		const errorMessage = validationResult.error.message;
-		console.log(validationResult.error);
 		return res.status(400).json({ errorMessage: errorMessage });
 	}
 
@@ -46,11 +29,16 @@ router.post("/signupSubmit", async (req, res) => {
 		req.session.authenticated = true;
 		req.session.email = email;
 		req.session.userId = userId;
+		req.session.userType = "regular";
 		req.session.cookie.maxAge = expireTime;
 
+		const redirectUrl = "/profile.html";
 		return res.status(200).json({
-			message: "User created successfully",
+			message: "Signup successful",
+			redirectUrl,
+			userType: req.session.userType,
 			userId: req.session.userId,
+			userEmail: req.session.email,
 		});
 	} catch (error) {
 		console.error("Error inserting user:", error.message);
@@ -60,14 +48,6 @@ router.post("/signupSubmit", async (req, res) => {
 	}
 });
 
-// router.get("/login", (req, res) => {
-// 	if (isValidSession(req)) {
-// 		return res.redirect("/");
-// 	}
-// 	const errorMessage = req.query.error || null;
-// 	res.render("login", { errorMessage });
-// });
-
 router.post("/loginSubmit", async (req, res) => {
 	const { email, password } = req.body;
 
@@ -76,7 +56,7 @@ router.post("/loginSubmit", async (req, res) => {
 
 		if (rows.length === 0) {
 			return res.status(401).json({
-				errorMessage: "Incorrect email or password",
+				errorMessage: "User does not exist",
 			});
 		}
 		const user = rows[0];
@@ -91,8 +71,6 @@ router.post("/loginSubmit", async (req, res) => {
 			req.session.userId = user.user_id;
 			req.session.userType = userType;
 			req.session.cookie.maxAge = expireTime;
-
-			console.log("Session after login:", req.session);
 
 			const redirectUrl =
 				userType === "admin" ? "/admin.html" : "/index.html";
@@ -123,6 +101,38 @@ router.get("/logout", (req, res) => {
 		}
 		res.status(200).json({ message: "Logged out successfully" });
 	});
+});
+
+router.delete("/deleteAccount", async (req, res) => {
+	const userId = req.session.userId;
+
+	try {
+		const result = await users.deleteUser(userId);
+		if (result) {
+			req.session.destroy((err) => {
+				if (err) {
+					console.error("Session destruction error:", err);
+					return res
+						.status(500)
+						.json({ errorMessage: "Error logging out." });
+				}
+				console.log(
+					"After session destroy - Session should be null:",
+					req.session
+				);
+				return res
+					.status(200)
+					.json({ message: "Account deleted successfully" });
+			});
+		} else {
+			return res
+				.status(500)
+				.json({ errorMessage: "Error deleting account" });
+		}
+	} catch (error) {
+		console.error("Delete account error:", error);
+		return res.status(500).json({ errorMessage: "Error deleting account" });
+	}
 });
 
 module.exports = router;
