@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
     });
   }
 });
-router.post("/manageAPI/:user_id", async (req, res) => {
+router.patch("/manageAPI/:user_id", async (req, res) => {
   const user_id = req.params.user_id;
   const available_tokens = req.body.available_tokens;
   const result = await users.updateUserTokens({
