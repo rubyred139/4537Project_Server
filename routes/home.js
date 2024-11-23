@@ -58,7 +58,41 @@ const simulate3DConversion = async (imagePath) => {
   }
 };
 
-// Route to handle file upload, conversion, and response
+/**
+ * @swagger
+ * /upload:
+ *   post:
+ *     summary: Upload an image, convert it to a 3D model, and download the 3D model file
+ *     tags:
+ *       - File Upload
+ *     security:
+ *       - sessionValidation: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *               userId:
+ *                 type: integer
+ *                 description: The ID of the user uploading the image.
+ *     responses:
+ *       200:
+ *         description: The converted 3D model is available for download
+ *         content:
+ *           application/octet-stream:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       400:
+ *         description: Image upload failed or no file uploaded
+ *       500:
+ *         description: Internal server error or failure to process the image
+ */
 router.post(
   "/upload",
   sessionValidation,
