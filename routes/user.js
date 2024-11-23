@@ -1,13 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const users = require("../database/users");
-require("dotenv").config();
+const { authenticateToken } = require("./function/middleware");
 
-const { isValidSession, sessionValidation } = include(
-  "routes/function/sessionValidation"
-);
-
-router.use(sessionValidation);
+router.use(authenticateToken);
 
 /**
  * @swagger
@@ -28,7 +24,7 @@ router.use(sessionValidation);
  */
 
 router.get("/", async (req, res) => {
-  return res.json({ loggedIn: req.session.authenticated });
+	return res.json({ loggedIn: !!req.user });
 });
 
 /**
@@ -67,16 +63,16 @@ router.get("/", async (req, res) => {
  *         description: User not found
  */
 router.get("/:email", async (req, res) => {
-  const email = req.params.email;
-  const user = await users.getUserByEmail(email);
+	const email = req.params.email;
+	const user = await users.getUserByEmail(email);
 
-  if (!user) {
-    return res.status(404).json({ message: "User not found." });
-  }
+	if (!user) {
+		return res.status(404).json({ message: "User not found." });
+	}
 
-  res.status(200).json({
-    user: user,
-  });
+	res.status(200).json({
+		user: user,
+	});
 });
 
 /**
@@ -108,21 +104,21 @@ router.get("/:email", async (req, res) => {
  *         description: User or tokens not found
  */
 router.get("/tokens/:userId", async (req, res) => {
-  const uid = req.params.userId;
+	const uid = req.params.userId;
 
-  if (!uid) {
-    return res.status(404).json({ message: "User not found." });
-  }
-  const userAvailableTokens = await users.getUserAvailableTokens(uid);
-  if (!userAvailableTokens) {
-    return res
-      .status(404)
-      .json({ message: "User not found or tokens are unavailable." });
-  }
+	if (!uid) {
+		return res.status(404).json({ message: "User not found." });
+	}
+	const userAvailableTokens = await users.getUserAvailableTokens(uid);
+	if (!userAvailableTokens) {
+		return res
+			.status(404)
+			.json({ message: "User not found or tokens are unavailable." });
+	}
 
-  return res.status(200).json({
-    userAvailableTokens: userAvailableTokens,
-  });
+	return res.status(200).json({
+		userAvailableTokens: userAvailableTokens,
+	});
 });
 
 module.exports = router;
