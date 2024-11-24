@@ -17,7 +17,64 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Forgot Password
+/**
+ * @swagger
+ * /auth/forgot-password:
+ *   post:
+ *     summary: Request a password reset
+ *     description: Sends a password reset email to the user with a reset link.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: Password reset email sent successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Password reset email sent."
+ *       400:
+ *         description: Bad request (e.g., missing email).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Email is required."
+ *       404:
+ *         description: User with the given email not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "User not found."
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal Server Error."
+ */
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
 
@@ -62,7 +119,57 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
-// Reset Password
+/**
+ * @swagger
+ * /auth/reset-password:
+ *   post:
+ *     summary: Reset the user's password
+ *     description: Resets the user's password using a token and a new password.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 example: "0c3abcd2fc3fbfa3298efeffb29e8cbacbb35c180e3c48c3f9b14df170c50db7"
+ *               newPassword:
+ *                 type: string
+ *                 example: "newSecurePassword123"
+ *     responses:
+ *       200:
+ *         description: Password reset successful.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Password reset successful."
+ *       400:
+ *         description: Invalid or expired token, or missing fields.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Token has expired."
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal Server Error."
+ */
 router.post("/reset-password", async (req, res) => {
   const { token, newPassword } = req.body;
 
