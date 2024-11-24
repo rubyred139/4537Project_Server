@@ -4,28 +4,6 @@ const users = require("../database/users");
 
 /**
  * @swagger
- * /user:
- *   get:
- *     summary: Check if the user is logged in
- *     responses:
- *       200:
- *         description: Returns the login status of the user
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 loggedIn:
- *                   type: boolean
- *                   example: true
- */
-
-router.get("/", async (req, res) => {
-	return res.json({ loggedIn: !!req.user });
-});
-
-/**
- * @swagger
  * /user/{email}:
  *   get:
  *     summary: Retrieve a user by email
