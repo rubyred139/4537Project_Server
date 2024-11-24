@@ -103,8 +103,8 @@ router.post("/signupSubmit", async (req, res) => {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === "production",
 			maxAge: 60 * 60 * 1000, // 1 hour
+			sameSite: "none",
 		});
-
 		return res.status(200).json({
 			message: "Signup successful",
 			redirectUrl: "/profile.html",
@@ -194,6 +194,7 @@ router.post("/loginSubmit", async (req, res) => {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === "production",
 				maxAge: 60 * 60 * 1000,
+				sameSite: "none",
 			});
 
 			return res.status(200).json({
