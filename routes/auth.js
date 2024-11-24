@@ -102,7 +102,6 @@ router.post("/signupSubmit", async (req, res) => {
 		res.cookie("token", token, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === "production",
-			sameSite: "strict",
 			maxAge: 60 * 60 * 1000, // 1 hour
 		});
 
@@ -194,7 +193,6 @@ router.post("/loginSubmit", async (req, res) => {
 			res.cookie("token", token, {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === "production",
-				sameSite: "strict",
 				maxAge: 60 * 60 * 1000,
 			});
 
@@ -221,7 +219,7 @@ router.post("/loginSubmit", async (req, res) => {
  * @swagger
  * /auth/logout:
  *   get:
- *     summary: Logout user and destroy session
+ *     summary: Logout user
  *     responses:
  *       200:
  *         description: Logged out successfully
