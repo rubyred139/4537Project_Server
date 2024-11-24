@@ -211,6 +211,28 @@ async function deleteUser(userId) {
 	}
 }
 
+async function updateUserPassword(userId, hashedPassword) {
+  const updatePasswordSQL = `
+    UPDATE user
+    SET password = :hashedPassword
+    WHERE user_id = :userId;
+  `;
+  let params = {
+    userId,
+    hashedPassword,
+  };
+
+  try {
+    const results = await database.query(updatePasswordSQL, params);
+    console.log("User password updated successfully");
+    return results[0].affectedRows > 0; // Return true if rows were updated
+  } catch (err) {
+    console.error("Error updating user password");
+    console.error(err);
+    return false;
+  }
+}
+
 module.exports = {
 	createUser,
 	getUserByEmail,
@@ -220,4 +242,5 @@ module.exports = {
 	updateUserTokens,
 	getUserAvailableTokens,
 	deleteUser,
+	updateUserPassword,
 };

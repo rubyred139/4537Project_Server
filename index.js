@@ -15,6 +15,7 @@ const homeRouter = include("routes/home");
 const authRouter = include("routes/auth");
 const adminRouter = include("routes/admin");
 const userRouter = include("routes/user");
+const resetRouter = include("routes/reset");
 
 //database connection
 const db_utils = include("database/db_utils");
@@ -54,6 +55,7 @@ app.use("/", homeRouter);
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
 app.use("/user", userRouter);
+app.use("/reset", resetRouter);
 
 app.get("*", (req, res) => {
 	res.status(404).json({ error: "Page Not Found" });
