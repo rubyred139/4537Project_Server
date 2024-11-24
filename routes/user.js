@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const users = require("../database/users");
-const { authenticateToken } = require("./function/middleware");
-
-router.use(authenticateToken);
 
 /**
  * @swagger
