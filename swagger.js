@@ -8,7 +8,7 @@ const swaggerDefinition = {
     version: "1.0.0",
     description: "Documentation for 3Dfiy API",
   },
-  servers: [{ url: "http://localhost:8080", description: "API server" }],
+  servers: [{ url: "https://four537project-server.onrender.com", description: "API server" }],
 };
 
 const options = {
